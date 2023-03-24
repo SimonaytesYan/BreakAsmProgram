@@ -12,4 +12,4 @@ and then prints on the screen "Access granted" if you entered right answer\
 and "Acces denied" otherwise.
 
 ## Game
-![Game play](https://github.com/SimonaytesYan/BreakAsmProgram/Sprites/GamePlay.png)
+![Game play](https://github.com/SimonaytesYan/BreakAsmProgram/blob/crack/Sprites/GamePlay.png)
