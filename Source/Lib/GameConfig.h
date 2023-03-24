@@ -15,7 +15,7 @@ const char   header[]        = "SLALOM IS MY LIFE!!! SLAAAALOOOOM!!";
 //=====================SCORE==========================
 const size_t MAX_SCORE_TEXT_LENGTH = 100;
 const char   SCORE_STRING_FORMAT[] = "Points  %d";
-const int    POINTS_TO_WIN         = 2000;
+const int    POINTS_TO_WIN         = 1000;
 
 //=====================SPRITES==========================
 const int SPRITE_SIZE = 64;  
@@ -32,20 +32,13 @@ const float        BOTTOM_COAST_Y = UP_COAST_Y + CHARACT_STEP*3 + CHARACT_SIZE*2
 sf::Vector2<float> COAST_SIZE     = {OUT_OF_WINDOW_X*2, 150};
 const float        COAST_TILE_SCALE    = 2;
 
-enum CoastTileType
-{
-    NOT_DEF_TYPE = 0,
-    GRASS_TYPE   = 1,
-    COAST_TYPE   = 2
-};
-
 //=====================RIVER==========================
 const float        RIVER_SPEED      = 0.4f;
 const float        RIVER_TILE_SCALE = 2;
 sf::Vector2<float> RIVER_SIZE       = {OUT_OF_WINDOW_X*2, BOTTOM_COAST_Y - UP_COAST_Y - COAST_SIZE.y};
 
 //=====================GATE==========================
-const int GATE_SPAWN_RATE = 1000 / RIVER_SPEED;
+const int GATE_SPAWN_RATE = 750 / RIVER_SPEED;
 const int SCORING_POINTS  = 100;
 
 #endif

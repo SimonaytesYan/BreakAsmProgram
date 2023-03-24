@@ -37,8 +37,16 @@ struct Label
     sf::Font font = sf::Font();
 };
 
+enum GATE_TYPE
+{
+    UNDEF_GATE = 0,
+    GREEN_GATE = 1,
+    RED_GATE   = 2,
+};
+
 struct Gate
 {
+    GATE_TYPE      gate_type = UNDEF_GATE;
     bool           status    = true;
     CharacterShape up_mp     = CharacterShape(1);
     CharacterShape bottom_mp = CharacterShape(1);
@@ -49,6 +57,13 @@ struct Coast
 {
     sf::RectangleShape figure = sf::RectangleShape();
     float              y      = 0;
+};
+
+enum CoastTileType
+{
+    NOT_DEF_TYPE = 0,
+    GRASS_TYPE   = 1,
+    COAST_TYPE   = 2
 };
 
 struct CoastTile
@@ -96,7 +111,7 @@ void CoastCtor(Coast* coast, float y);
 
 int RiverTileCtor(RiverTile* river, float x, float y);
 
-void GateCtor(Gate* gate, float x, float y);
+void GateCtor(Gate* gate, float x, float y, GATE_TYPE gate_type);
 
 int ScoreCtor(Score* score, int points);
 

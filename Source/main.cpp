@@ -145,7 +145,7 @@ int RiverTileCtor(RiverTile* river, float x, float y)
     return 0;
 }
 
-void GateCtor(Gate* gate, float x, float y)
+void GateCtor(Gate* gate, float x, float y, GATE_TYPE gate_type)
 {
     CTOR(Gate, gate);
 
@@ -154,12 +154,20 @@ void GateCtor(Gate* gate, float x, float y)
     gate->status  = true;
 
     gate->bottom_mp.setRadius(20);
-    gate->bottom_mp.setFillColor(sf::Color(20, 220, 50));
     gate->bottom_mp.setPosition(x, y);
 
     gate->up_mp.setRadius(20);
-    gate->up_mp.setFillColor(sf::Color(20, 220, 50));
     gate->up_mp.setPosition(x, y + CHARACT_SIZE*2);
+
+    gate->gate_type = gate_type;
+    sf::Color gate_color = sf::Color(0, 0, 0);
+    if (gate->gate_type == GREEN_GATE)
+        gate_color = sf::Color(20, 220, 50);        //Green color
+    else if (gate->gate_type == RED_GATE)
+        gate_color = sf::Color::Red;
+
+    gate->bottom_mp.setFillColor(gate_color);
+    gate->up_mp.setFillColor(gate_color);
 }
 
 int ScoreCtor(Score* score, int points)
@@ -255,6 +263,12 @@ int FillRiver(RiverTileArray_t* river)
     return 0;
 }
 
+bool Charact_in_gate(Gate* gate, Character *character)
+{
+    return gate->coord.x <= CHARACT_SIZE &&
+            character->y > gate->coord.y && character->y <= gate->coord.y + CHARACT_STEP;
+}
+
 void DrawGates(sf::RenderWindow* window, GateArray_t* gates, Character *character, Score *score)
 {
     for(size_t i = 0; i < gates->size; i++)
@@ -262,19 +276,27 @@ void DrawGates(sf::RenderWindow* window, GateArray_t* gates, Character *characte
         gates->array[i].bottom_mp.move(-RIVER_SPEED, 0);
         gates->array[i].up_mp.move(-RIVER_SPEED, 0);
         gates->array[i].coord.x -= RIVER_SPEED;
-        if (gates->array[i].status                && gates->array[i].coord.x <= CHARACT_SIZE &&
-            character->y > gates->array[i].coord.y && character->y <= gates->array[i].coord.y + CHARACT_STEP)
-        {
-            gates->array[i].status = false;
-            score->points += SCORING_POINTS;
-            UpdateScore(score);
 
+        if (gates->array[i].coord.x < 0)
+            gates->array[i].status = false;
+
+        if (gates->array[i].status && Charact_in_gate(&gates->array[i], character))
+        {
+            if (gates->array[i].gate_type == GREEN_GATE)
+                score->points += SCORING_POINTS;
+            else if (gates->array[i].gate_type == RED_GATE)
+                score->points -= SCORING_POINTS;
+
+            gates->array[i].status = false;
+            UpdateScore(score);
         }
         else if (gates->array[i].status)
         {
             window->draw(gates->array[i].bottom_mp);
             window->draw(gates->array[i].up_mp);
         }
+
+        
     }
 }
 
@@ -283,8 +305,14 @@ void CreateNewGate(GateArray_t* gates)
     if (rand()%GATE_SPAWN_RATE == 0)
     {
         GateArrayResize(gates);
+        GATE_TYPE new_gate_type = UNDEF_GATE;
+        if (rand()%3 == 0)
+            new_gate_type = RED_GATE;
+        else
+            new_gate_type = GREEN_GATE;
 
-        GateCtor(gates->array + gates->size, OUT_OF_WINDOW_X, CHARACT_STEP*(float)(rand()%3 + 1) - CHARACT_STEP/4);
+        GateCtor(gates->array + gates->size, OUT_OF_WINDOW_X, CHARACT_STEP*(float)(rand()%3 + 1) - CHARACT_STEP/4, 
+                 new_gate_type);
         gates->size++;
     }
 }
